@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { apiFetch } from "../../context/api";
+import { Link } from "react-router-dom";
 
 export default function AdminCoupons() {
   const { token } = useAuth();
@@ -18,30 +19,65 @@ export default function AdminCoupons() {
   };
 
   const remove = async (id) => {
+    if (!confirm("Delete this coupon?")) return;
     await apiFetch(`/coupons/${id}`, { method: "DELETE" }, token);
     load();
   };
 
   return (
-    <main className="page-container">
-      <h1>Manage Coupons</h1>
-      <form className="admin-form" onSubmit={create}>
-        <input placeholder="Code (e.g. TREND10)" value={form.code} onChange={(e) => setForm({ ...form, code: e.target.value })} required />
-        <input placeholder="Discount amount (₹)" type="number" value={form.discount} onChange={(e) => setForm({ ...form, discount: e.target.value })} required />
-        <button type="submit" className="btn-primary">Add Coupon</button>
-      </form>
-      <table className="admin-table">
-        <thead><tr><th>Code</th><th>Discount</th><th>Actions</th></tr></thead>
-        <tbody>
+    <div className="admin-layout">
+      <aside className="admin-sidebar">
+        <div className="sidebar-brand">⚡ Trendify Admin</div>
+        <nav className="sidebar-nav">
+          <Link to="/admin" className="sidebar-link">🏠 Dashboard</Link>
+          <Link to="/admin/products" className="sidebar-link">📦 Products</Link>
+          <Link to="/admin/orders" className="sidebar-link">🧾 Orders</Link>
+          <Link to="/admin/users" className="sidebar-link">👤 Users</Link>
+          <Link to="/admin/coupons" className="sidebar-link active">🎟️ Coupons</Link>
+          <Link to="/" className="sidebar-link">🛍️ View Store</Link>
+        </nav>
+      </aside>
+
+      <main className="admin-main">
+        <div className="admin-header">
+          <h1>🎟️ Manage Coupons</h1>
+        </div>
+
+        <form className="admin-form-card" onSubmit={create}>
+          <h3>Create New Coupon</h3>
+          <div className="form-grid">
+            <input
+              placeholder="Coupon Code (e.g. TREND10)"
+              value={form.code}
+              onChange={(e) => setForm({ ...form, code: e.target.value.toUpperCase() })}
+              required
+            />
+            <input
+              placeholder="Discount Amount (₹)"
+              type="number"
+              value={form.discount}
+              onChange={(e) => setForm({ ...form, discount: e.target.value })}
+              required
+            />
+          </div>
+          <button type="submit" className="btn-primary">+ Create Coupon</button>
+        </form>
+
+        <div className="coupons-grid">
           {coupons.map((c) => (
-            <tr key={c._id}>
-              <td>{c.code}</td>
-              <td>₹{c.discount}</td>
-              <td><button onClick={() => remove(c._id)}>Delete</button></td>
-            </tr>
+            <div key={c._id} className="coupon-card">
+              <div className="coupon-left">
+                <span className="coupon-icon">🎟️</span>
+                <div>
+                  <h3>{c.code}</h3>
+                  <p>₹{c.discount} off on your order</p>
+                </div>
+              </div>
+              <button className="delete-btn" onClick={() => remove(c._id)}>🗑️</button>
+            </div>
           ))}
-        </tbody>
-      </table>
-    </main>
+        </div>
+      </main>
+    </div>
   );
 }
