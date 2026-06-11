@@ -812,3 +812,11 @@ a { text-decoration: none; color: inherit; }
   .page-hero { height: 280px; }
   .page-hero-content h1 { font-size: 30px; }
 }
+
+/* Auth Tabs */
+.auth-tabs { display: flex; gap: 0; margin-bottom: 24px; border: 1.5px solid var(--border); border-radius: 10px; overflow: hidden; }
+.auth-tab { flex: 1; padding: 11px; border: none; background: white; font-size: 14px; font-weight: 600; cursor: pointer; color: var(--gray); transition: all 0.2s; }
+.auth-tab.active { background: var(--accent); color: white; }
+.auth-tab:hover:not(.active) { background: var(--light); }
+.link-btn { background: none; border: none; color: var(--accent); font-weight: 600; cursor: pointer; font-size: 14px; padding: 0; }
+.link-btn:hover { text-decoration: underline; }
